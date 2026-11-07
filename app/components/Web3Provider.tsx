@@ -29,7 +29,7 @@ const config = createConfig(
     appName: "kymcoin-wallet",
 
     // Optional App Info
-    appDescription: "Web3 Wallet developed by Kymcoin",
+    appDescription: "Web3 Wallet developed by Kymcoinllc",
     appUrl: " http://192.168.137.1:3000", // your app's url
     appIcon: " https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
   }),
