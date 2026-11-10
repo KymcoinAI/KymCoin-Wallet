@@ -14,6 +14,16 @@ export default function Home() {
     query: { enabled: isConnected } 
   });
 
+  let displayBalance = "No balance data";
+
+  if (isLoading) {
+    displayBalance = "Loading...";
+  } else if (isError) {
+    displayBalance = "Error loading balance";
+  } else if (balance) {
+    displayBalance = `${formatUnits(balance.value, balance.decimals)} ${balance.symbol ?? ""}`;
+  }
+
   return (
     <div>
       <p>KymCoin Wallet</p>
@@ -21,15 +31,8 @@ export default function Home() {
       {isConnected && address && (
         <div>
           <p>Address: {address}</p>
-          <p>Balance: {isLoading ? (
-            "Loading..."
-          ) : isError ? (
-            "Error loading balance"
-          ) : balance ? (
-            `${formatUnits(balance.value, balance.decimals)} ${balance.symbol ?? ""}`
-          ) : (
-            "No balance data"
-          )}</p>
+          <p>Balance: {displayBalance}
+          </p>
         </div>
       )}
     </div>
