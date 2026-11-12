@@ -1,7 +1,9 @@
 "use client";
 
+import React from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { injected, coinbaseWallet } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
@@ -21,6 +23,22 @@ const config = createConfig(
         `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_ID}`
       )
     },
+
+connectors: [
+      injected({ target: "metaMask" }),
+      coinbaseWallet({
+        appName: "kymcoin-wallet",
+      }),
+      injected({ target: { id: "trustWallet",
+         name: "Trust Wallet",
+          provider: (window) => {
+            if (typeof window === "undefined") {
+              return undefined;
+            }
+            return (window as any).trustWallet || (window as any).ethereum;
+          }
+       } }),
+    ],
 
     // Required API Keys
     'walletConnectProjectId': walletConnectProjectId!,
