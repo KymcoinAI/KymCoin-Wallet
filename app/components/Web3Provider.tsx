@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 import { injected, coinbaseWallet } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { queryClient } from './config/index.ts';
 
 const walletConnectProjectId = 
 process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
