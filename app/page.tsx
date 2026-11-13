@@ -1,22 +1,26 @@
 "use client";
-import { ConnectKitButton } from "connectkit";
+import { AppKitButton, AppKitNetworkButton, useAppKitAccount } from "@reown/appkit/react";
 import Image from "next/image";
 import { useAccount, useBalance, useConnect, useDisconnect } from "wagmi";
 import { formatUnits } from "viem";
-import { getAllBalances } from "viem/zksync";
-import { mainnet, sepolia } from "wagmi/chains";
 
 export default function Home() {
-  const { address, isConnected, chainId } = useAccount();
+  const { address, isConnected, caipAddress } = useAppKitAccount();
+
+const{ address: evmAddress, chainId: evmChainId, isConnected: isEvmConnected } = useAccount();
+const isEvm = caipAddress?.startsWith("eip155");
+
   const { data: balance, isLoading, isError } = useBalance({ 
-    address, 
-    chainId, 
-    query: { enabled: isConnected } 
+    address: evmAddress, 
+    chainId: evmChainId, 
+    query: { enabled: Boolean(isConnected && isEvm) } 
   });
 
   let displayBalance = "No balance data";
 
-  if (isLoading) {
+  if (!isEvm && isConnected) {
+    displayBalance = "Bitcoin Connected (Fetch via BTC API)";
+  } else if (isLoading) {
     displayBalance = "Loading...";
   } else if (isError) {
     displayBalance = "Error loading balance";
@@ -25,11 +29,16 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <p>KymCoin Wallet</p>
-      <ConnectKitButton />
+    <div className="p-6 space-y-4">
+      <p className="text-xl font-bold">KymCoin Wallet</p>
+    
+<div className="flex items-center gap-3">
+        <AppKitButton />
+        <AppKitNetworkButton />
+</div>
+
       {isConnected && address && (
-        <div>
+        <div className="mt-4 p-4 border rounded-lg bg-gray-100">
           <p>Address: {address}</p>
           <p>Balance: {displayBalance}
           </p>

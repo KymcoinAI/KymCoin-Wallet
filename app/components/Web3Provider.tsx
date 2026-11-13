@@ -1,67 +1,19 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
-import { injected, coinbaseWallet } from "wagmi/connectors";
+import { WagmiProvider, type Config } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { queryClient } from './config/index.ts';
+import { wagmiAdapter, queryClient } from '../config/index';
 
-const walletConnectProjectId = 
-process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-
-const config = createConfig(
-  getDefaultConfig({
-    // Your dApps chains
-    chains: [mainnet,sepolia],
-    transports: {
-      // RPC URL for each chain
-      [mainnet.id]: http(
-        `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_ID}`,
-      ),
-      [sepolia.id]: http(
-        `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_ID}`
-      )
-    },
-
-connectors: [
-      injected({ target: "metaMask" }),
-      coinbaseWallet({
-        appName: "kymcoin-wallet",
-      }),
-      injected({ target: { id: "trustWallet",
-         name: "Trust Wallet",
-          provider: (window) => {
-            if (typeof window === "undefined") {
-              return undefined;
-            }
-            return (window as any).trustWallet || (window as any).ethereum;
-          }
-       } }),
-    ],
-
-    // Required API Keys
-    'walletConnectProjectId': walletConnectProjectId!,
-
-    // Required App Info
-    appName: "kymcoin-wallet",
-
-    // Optional App Info
-    appDescription: "Web3 Wallet developed by Kymcoinllc",
-    appUrl: " http://192.168.137.1:3000", // your app's url
-    appIcon: " https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
-  }),
-);
-
-const queryClient = new QueryClient();
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{children}</ConnectKitProvider>
+       {children}
       </QueryClientProvider>
     </WagmiProvider>
   );
 };
+
+export default Web3Provider;
