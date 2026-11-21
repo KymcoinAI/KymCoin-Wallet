@@ -29,19 +29,21 @@ const isEvm = caipAddress?.startsWith("eip155");
   }
 
   return (
-    <div className="p-6 space-y-4">
-      <p className="text-xl font-bold">KymCoin Wallet</p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+
+      <h1 className="text-3xl font-bold text-amber-500 mb-6">KymCoin Wallet</h1>
     
-<div className="flex items-center gap-3">
+<div className="flex flex-wrap items-center justify-center gap-3 bg-amber-800 p-3 rounded-2xl shadow-md">
         <AppKitButton />
         <AppKitNetworkButton />
 </div>
 
       {isConnected && address && (
-        <div className="mt-4 p-4 border rounded-lg bg-gray-100">
-          <p>Address: {address}</p>
-          <p>Balance: {displayBalance}
+        <div className="mt-6 p-5 border border-amber-200 rounded-xl bg-white shadow-sm text-center max-w-md w-full">
+          <p className="text-sm text-gray-600 break-all mb-2">
+            <span className="font-semibold text-gray-800">Address:</span> {address}
           </p>
+          <p className="text-lg font-bold text-amber-700">Balance: {displayBalance}</p>
         </div>
       )}
     </div>
